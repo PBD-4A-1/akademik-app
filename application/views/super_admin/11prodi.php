@@ -19,7 +19,7 @@
  		<form action="" method="POST">
  			<div class="card-header py-3">
  				<h5 class="m-0 font-weight-bold">Data Program Studi
- 					<a href="<?= base_url(); ?>akreditasi_admin/tambah" class="btn btn-primary btn-sm mr-4 float-right">
+ 					<a href="<?= base_url(); ?>super_admin/tambah" class="btn btn-primary btn-sm mr-4 float-right">
  						<i class="fa fa-plus"></i>
  						Tambah Data
  					</a>

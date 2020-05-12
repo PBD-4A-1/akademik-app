@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2020 at 01:58 PM
+-- Generation Time: May 13, 2020 at 01:25 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.3.6
 
@@ -40,8 +40,9 @@ CREATE TABLE `dt_prodi` (
 --
 
 INSERT INTO `dt_prodi` (`idprodi`, `kdprodi`, `nmprodi`, `akreditasi`) VALUES
-(1, 1, 'Manajement Informatika', 'B'),
-(8, 2, 'Agribisnis', 'B');
+(1, 1, 'Akuntansi', 'A'),
+(2, 2, 'Agribisnis', 'B'),
+(3, 3, 'Manajement Informatika', 'B');
 
 -- --------------------------------------------------------
 
@@ -55,6 +56,18 @@ CREATE TABLE `mahasiswa` (
   `nama` varchar(50) NOT NULL,
   `idprodi` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mahasiswa`
+--
+
+INSERT INTO `mahasiswa` (`idmhs`, `npm`, `nama`, `idprodi`) VALUES
+(1, '18753034', 'Irfan Al-Fath', 3),
+(2, '18753022', 'Erina Hapsari Daely', 3),
+(3, '18753030', 'I Komang Agus Suhadi Adnyana', 3),
+(4, '18753003', 'Afriandi Selamatullah', 3),
+(5, '18753024', 'Farras Alif Utomo', 3),
+(6, '18753028', 'Fidi Fran Wijaya', 3);
 
 -- --------------------------------------------------------
 
@@ -79,9 +92,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`iduser`, `nama`, `username`, `email`, `password`, `jenisuser`, `level`, `status`, `idprodi`) VALUES
-(4, 'Irfan Al-Fath', 'alfath_ir', 'alfath140600@gmail.com', '$2y$10$WQ6c3Ngh46ne.9Jri0Gin.xvhBsMlkoCntDw1YDv44oA2hba02Pq2', '0', '00', 'T', 0),
-(7, 'Super Admin', 'superadmin', 'superadmin@gmial.com', '$2y$10$HFN80CIgG704tKYuOwqwIufx3s4/nmlOPoZthn35w1zcNZl9/K/gq', '1', '11', 'T', 0),
-(8, 'Admin 1', 'admin1', 'admin1@gmial.com', '$2y$10$LPiTUQA4ItNCwiJS5lr0tu7e2o3I9thFSyKfrMewONmcfqKiAF2em', '1', '10', 'T', 0);
+(4, 'Irfan Al-Fath', 'alfath_ir', 'alfath140600@gmail.com', '$2y$10$WQ6c3Ngh46ne.9Jri0Gin.xvhBsMlkoCntDw1YDv44oA2hba02Pq2', '1', '11', 'F', 0),
+(7, 'Super Admin', 'superadmin', 'superadmin@gmial.com', '$2y$10$HFN80CIgG704tKYuOwqwIufx3s4/nmlOPoZthn35w1zcNZl9/K/gq', '1', '11', 'F', 0),
+(8, 'Admin 1', 'admin1', 'admin1@gmial.com', '$2y$10$LPiTUQA4ItNCwiJS5lr0tu7e2o3I9thFSyKfrMewONmcfqKiAF2em', '1', '10', 'F', 0);
 
 --
 -- Indexes for dumped tables
@@ -99,6 +112,7 @@ ALTER TABLE `dt_prodi`
 --
 ALTER TABLE `mahasiswa`
   ADD PRIMARY KEY (`idmhs`),
+  ADD UNIQUE KEY `npm` (`npm`),
   ADD KEY `idprodi` (`idprodi`);
 
 --
@@ -115,13 +129,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `dt_prodi`
 --
 ALTER TABLE `dt_prodi`
-  MODIFY `idprodi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idprodi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `mahasiswa`
+--
+ALTER TABLE `mahasiswa`
+  MODIFY `idmhs` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
