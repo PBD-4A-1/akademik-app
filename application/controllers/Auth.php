@@ -5,6 +5,7 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('Auth_model');
         $this->load->library('form_validation');
     }
 
@@ -34,10 +35,23 @@ class Auth extends CI_Controller
         
         //jika user ada
         if ($user) {
-            //jika user aktif
             if ($user['status'] == 'T') {
-                //cek passwd
+                $this->session->set_flashdata(
+                    'flash_data',
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <small>
+                            <strong>Username</strong> sedang aktif!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </small>
+                    </div>'
+                );
+                redirect('auth');
+            } elseif ($user['status'] == 'F') {
                 if (password_verify($password, $user['password'])) {
+                    $this->Auth_model->ubahStatusUserT($username);
+
                     $data = [
                         'username' => $user['username'],
                         'jenisuser' => $user['jenisuser'],
@@ -57,21 +71,20 @@ class Auth extends CI_Controller
                     $this->session->set_flashdata(
                         'flash_data',
                         '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <small>
-                            <strong>Password</strong> salah!
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </small>
-                        </div>'
+                                        <small>
+                                            <strong>Password</strong> salah!
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </small>
+                                        </div>'
                     );
                     redirect('auth');
                 }
-            }
-        } else {
-            $this->session->set_flashdata(
-                'flash_data',
-                '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            } else {
+                $this->session->set_flashdata(
+                    'flash_data',
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <small>
                     <strong>Username</strong> belum terdaftar!
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -79,20 +92,28 @@ class Auth extends CI_Controller
                     </button>
                 </small>
                 </div>'
-            );
-            redirect('auth');
+                );
+                redirect('auth');
+            }
         }
     }
 
     public function logout()
     {
-        $this->session->unset_userdata('username');
-        $this->session->unset_userdata('jenisuser');
-        $this->session->unset_userdata('level');
+        $user = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
 
-        $this->session->set_flashdata(
-            'flash_data',
-            '<div class="alert alert-success alert-dismissible fade show" role="alert">
+        if ($user['status'] == 'T') {
+            $username = $user['username'];
+
+            $this->Auth_model->ubahStatusUserF($username);
+            
+            $this->session->unset_userdata('username');
+            $this->session->unset_userdata('jenisuser');
+            $this->session->unset_userdata('level');
+
+            $this->session->set_flashdata(
+                'flash_data',
+                '<div class="alert alert-success alert-dismissible fade show" role="alert">
                 <small>
                     Berhasil <strong>Logout</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -100,8 +121,17 @@ class Auth extends CI_Controller
                     </button>
                 </small>
             </div>'
-        );
-        redirect('auth');
+            );
+            redirect('auth');
+        } elseif ($user['status'] == 'F') {
+            if ($user['jenisuser'] == 1 && $user['level'] == 11) {
+                redirect('super_admin');
+            } elseif ($user['jenisuser'] == 1 && $user['level'] == 10) {
+                redirect('admin');
+            } else {
+                redirect('user');
+            }
+        }
     }
     
     
@@ -134,7 +164,7 @@ class Auth extends CI_Controller
                 'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
                 'jenisuser' => '0',
                 'level' => '00',
-                'status' => 'T'
+                'status' => 'F'
             ];
 
             $this->db->insert('user', $data);
