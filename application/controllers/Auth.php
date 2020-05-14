@@ -81,10 +81,11 @@ class Auth extends CI_Controller
                     );
                     redirect('auth');
                 }
-            } else {
-                $this->session->set_flashdata(
-                    'flash_data',
-                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            }
+        } else {
+            $this->session->set_flashdata(
+                'flash_data',
+                '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <small>
                     <strong>Username</strong> belum terdaftar!
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -92,9 +93,8 @@ class Auth extends CI_Controller
                     </button>
                 </small>
                 </div>'
-                );
-                redirect('auth');
-            }
+            );
+            redirect('auth');
         }
     }
 
